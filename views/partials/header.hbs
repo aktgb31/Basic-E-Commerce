@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-sm bg-light">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">E commerce</a>
+        </div>
+        <ul class="navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" style="cursor:default" onclick="return false;">Hi {{userName}} !</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/cart">Cart</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/orders">Orders</a>
+            </li>
+            {{#if loggedIn}}
+            <li class="nav-item">
+                <a class="nav-link" href="/user/logout">Log Out</a>
+            </li>
+            {{else}}
+            <li class="nav-item">
+                <a class="nav-link" href="/user/login">Log In</a>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
+</nav>
+{{#if success}}
+<div class="alert alert-success">
+    <strong>{{success}}</strong>
+</div>
+{{/if}}
+{{#if error}}
+<div class="alert alert-danger">
+    <strong>{{error}}</strong>
+</div>
+{{/if}}
