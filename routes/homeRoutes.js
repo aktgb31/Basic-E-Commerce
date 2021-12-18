@@ -9,9 +9,11 @@ router.get('/', catchAsyncErrors(async(req, res, next) => {
     data.error = req.session.error;
     delete req.session.success;
     delete req.session.error;
-    if (req.session.userId)
+    data.loggedIn = false;
+    if (req.session.userId) {
+        data.loggedIn = true;
         data.userName = req.session.userName;
-    else
+    } else
         data.userName = 'User';
     let products = await Product.find({});
     products = products.map(product => {

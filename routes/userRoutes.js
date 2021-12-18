@@ -66,8 +66,13 @@ router.get('/cart', isAuthenticatedUser, catchAsyncErrors(async(req, res, next) 
     delete req.session.success;
     delete req.session.error;
 
-    const user = await User.find({ _id: req.session.userId }).populate('cart');
-    console.log(user);
+    data.loggedIn = true;
+    data.userName = req.session.userName;
+
+    const user = await User.findById({ _id: req.session.userId }, ).populate('cart');
+    if (user.cart.length > 0)
+        data.cart = user.cart
+    console.log(data);
     res.render('cart', data);
 }))
 
@@ -79,7 +84,12 @@ router.post('/cart', isAuthenticatedUser, catchAsyncErrors(async(req, res, next)
     res.redirect('/user/cart');
 }));
 
-router.delete('/cart', isAuthenticatedUser, catchAsyncErrors(async(req, res, next) => {
+router.get('/cart/delete/:productId', isAuthenticatedUser, catchAsyncErrors(async(req, res, next) => {
+    const productId = req.params.productId;
+    console.log(productId);
+    const userId = req.session.userId;
+    await User.findByIdAndUpdate(userId, { $pull: { cart: productId } });
+    req.session.success = 'Product removed from cart';
     res.redirect('/user/cart');
 }));
 
