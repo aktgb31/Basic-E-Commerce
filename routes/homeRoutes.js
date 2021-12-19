@@ -1,5 +1,6 @@
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const Product = require('../models/product');
+const User = require('../models/user');
 
 const router = require('express').Router();
 
@@ -16,9 +17,16 @@ router.get('/', catchAsyncErrors(async(req, res, next) => {
     } else
         data.userName = 'User';
     let products = await Product.find({});
+
+    const user = await User.findById(req.session.userId);
+    let userCart = [];
+    if (user) userCart = user.cart;
+
     products = products.map(product => {
         if (product.quantity > 0) product.inStock = true;
         else product.outOfStock = true;
+        if (userCart.find((bsonObjectId) => { return bsonObjectId.toString() == product._id; }))
+            product.inCart = true;
         return product;
     });
     data.products = []

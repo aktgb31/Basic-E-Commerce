@@ -18,40 +18,43 @@
         <div class="d-flex justify-content-center row">
             <div class="col-md-8">
                 <div class="p-2">
-                    <h4>Shopping cart</h4>
+                    <h4>Your Orders</h4>
                 </div>
-                {{#if cart}}
-                {{#each cart as |product|}}
+                {{#if orders}}
+                {{#each orders as |order|}}
                 <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white mt-4 px-3 rounded">
 
                     <div class="d-flex flex-column align-items-left product-details"><span
-                            class="font-weight-bold"><strong>{{product.name}}</strong></span>
+                            class="font-weight-bold"><strong>{{order.productId.name}}</strong></span>
                         <div class="d-flex flex-row product-desc">
-                            <div class="size mr-1"><span class="text-grey">{{product.description}}</span></div>
+                            <div class="size mr-1"><span class="text-grey">{{order.productId.description}}</span></div>
                         </div>
                     </div>
-
                     <div>
-                        <h5 class="text-grey">{{product.price}} Rs</h5>
+                        <h5 class="text-grey">{{order.productId.price}} Rs</h5>
                     </div>
                     <div>
-                        <form action="/user/cart/delete" method="POST">
-                            <input type="hidden" name="productId" value="{{product.id}}">
-                            <button type="submit" class="btn btn-danger">Remove</button>
+                        <form action="/user/order/cancel" method="POST">
+                            <input type="hidden" name="orderId" value="{{order._id}}">
+                            <button type="submit"
+                                class="btn btn-danger {{#if product.cancelled}}disabled{{/if}}">Cancel</button>
                         </form>
                     </div>
                     <div>
-                        <form action="/user/order" method="POST">
-                            <input type="hidden" name="productId" value="{{product.id}}">
-                            <button type="submit" class="btn btn-success">Order</button>
-                        </form>
+                        {{#if product.delivered}}
+                        <button type="button" class="btn btn-success disabled">Delivered</button>
+                        {{else if product.cancelled}}
+                        <button type="button" class="btn btn-danger disabled">Cancelled</button>
+                        {{else}}
+                        <button type="button" class="btn btn-warning disabled">Not Delivered</button>
+                        {{/if}}
                     </div>
                 </div>
                 {{/each}}
                 {{else}}
                 <div class="d-flex flex-column align-items-center p-2 bg-white mt-4 px-3 rounded">
                     <div class="d-flex flex-column align-items-center product-details"><span
-                            class="font-weight-bold"><strong>No items in cart</strong></span>
+                            class="font-weight-bold"><strong>No orders placed</strong></span>
                     </div>
                 </div>
                 {{/if}}
