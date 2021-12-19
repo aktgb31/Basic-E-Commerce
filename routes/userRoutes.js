@@ -56,7 +56,6 @@ router.post('/login', isLoginedUser, catchAsyncErrors(async(req, res, next) => {
 
 router.get('/logout', isAuthenticatedUser, catchAsyncErrors(async(req, res, next) => {
     req.session.destroy();
-    res.session.success = 'You have been logged out';
     res.redirect('/');
 }));
 

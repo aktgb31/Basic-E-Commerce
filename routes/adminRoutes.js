@@ -32,7 +32,7 @@ router.post('/login', catchAsyncErrors(async(req, res, next) => {
 
 router.get('/logout', isAdmin, catchAsyncErrors(async(req, res, next) => {
     req.session.destroy();
-    res.session.success = 'You have been logged out';
+    // req.session.success = 'You have been logged out';
     res.redirect('/');
 }));
 
@@ -48,7 +48,6 @@ router.get('/order', isAdmin, catchAsyncErrors(async(req, res, next) => {
 
     const orders = await Order.find().populate('productId').sort({ date: -1 });
     data.orders = orders;
-    console.log(orders)
     res.render('adminOrder', data);
 }));
 
@@ -74,6 +73,31 @@ router.post('/order/deliver', isAdmin, catchAsyncErrors(async(req, res, next) =>
     res.redirect('/admin/order');
 }))
 
+
+router.get('/product', isAdmin, catchAsyncErrors(async(req, res, next) => {
+    const data = {};
+    data.success = req.session.success;
+    data.error = req.session.error;
+    delete req.session.success;
+    delete req.session.error;
+
+    const products = await Product.find();
+    if (products.length > 0)
+        data.products = products;
+    res.render('adminProduct', data);
+}));
+
+router.post('/product/', isAdmin, catchAsyncErrors(async(req, res, next) => {
+    await Product.create({ name: req.body.productName, description: req.body.productDescription, price: req.body.productPrice, quantity: req.body.productQuantity });
+    req.session.success = 'Product added';
+    res.redirect('/admin/product');
+}));
+
+router.post('/product/update', isAdmin, catchAsyncErrors(async(req, res, next) => {
+    await Product.findByIdAndUpdate(req.body.productId, { quantity: req.body.productQuantity });
+    req.session.success = 'Product Updated';
+    res.redirect('/admin/product');
+}));
 
 router.get('/', isAdmin, catchAsyncErrors(async(req, res, next) => {
     const data = {};

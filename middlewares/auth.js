@@ -17,7 +17,6 @@ exports.isAuthenticatedUser = catchAsyncErrors(async(req, res, next) => {
 
 // To stop users from accessing admin features
 exports.isAdmin = catchAsyncErrors(async(req, res, next) => {
-    if (ENVIRONMENT === "development") return next();
     if (req.session && req.session.admin) return next();
     else return next(new ErrorHandler("Please login to access this resource", "/admin/login"));
 });
