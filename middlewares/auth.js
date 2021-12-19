@@ -1,3 +1,4 @@
+const { ENVIRONMENT } = require("../config");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("./catchAsyncErrors");
 
@@ -12,4 +13,11 @@ exports.isLoginedUser = catchAsyncErrors(async(req, res, next) => {
 exports.isAuthenticatedUser = catchAsyncErrors(async(req, res, next) => {
     if (req.session && req.session.userId) return next();
     else return next(new ErrorHandler("Please login to access this resource", "/user/login"));
+});
+
+// To stop users from accessing admin features
+exports.isAdmin = catchAsyncErrors(async(req, res, next) => {
+    if (ENVIRONMENT === "development") return next();
+    if (req.session && req.session.admin) return next();
+    else return next(new ErrorHandler("Please login to access this resource", "/admin/login"));
 });

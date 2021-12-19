@@ -131,7 +131,6 @@ router.post('/order/cancel', isAuthenticatedUser, catchAsyncErrors(async(req, re
     const product = await Product.findById(order.productId);
     product.quantity++;
     await product.save();
-    await User.findByIdAndUpdate(userId, { $pull: { orders: orderId } });
     order.cancelled = true;
     await order.save();
     req.session.success = 'Order canceled';

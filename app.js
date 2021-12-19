@@ -22,6 +22,7 @@ app.use('/', express.static(__dirname + '/public'));
 //Setting routes
 app.use('/', require('./routes/homeRoutes'));
 app.use('/user', require('./routes/userRoutes'));
+app.use('/admin', require('./routes/adminRoutes'));
 
 //Handling errors
 app.use(errorMiddleware);
