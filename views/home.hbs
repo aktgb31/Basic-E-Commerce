@@ -24,13 +24,14 @@
                     </div>
                 </div>
             </div>
+            {{#if products}}
             {{#each products as |p|}}
             <div class="row">
                 {{#each p as |product|}}
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
                     <div class="bg-white rounded shadow-sm">
                         <div class="p-4">
-                            <h5> <a href="#" class="text-dark">{{product.name}}</a></h5>
+                            <h5 class="text-dark">{{product.name}}</h5>
                             <p class="small text-muted mb-0">{{product.description}}</p>
                             </p>
                             <div
@@ -63,6 +64,14 @@
                 {{/each}}
             </div>
             {{/each}}
+            {{else}}
+            <div class="row">
+                <div class="col-lg-12 mx-auto">
+                    <h1 class="display-4 text-center">No Products to show</h1>
+
+                </div>
+            </div>
+            {{/if}}
         </div>
     </div>
 </body>

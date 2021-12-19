@@ -32,7 +32,6 @@ router.post('/login', catchAsyncErrors(async(req, res, next) => {
 
 router.get('/logout', isAdmin, catchAsyncErrors(async(req, res, next) => {
     req.session.destroy();
-    // req.session.success = 'You have been logged out';
     res.redirect('/');
 }));
 
@@ -81,6 +80,9 @@ router.get('/product', isAdmin, catchAsyncErrors(async(req, res, next) => {
     delete req.session.success;
     delete req.session.error;
 
+    data.loggedIn = true;
+    data.userName = req.session.userName;
+
     const products = await Product.find();
     if (products.length > 0)
         data.products = products;
@@ -108,6 +110,13 @@ router.get('/', isAdmin, catchAsyncErrors(async(req, res, next) => {
 
     data.loggedIn = true;
     data.userName = req.session.userName;
+
+    data.userCount = await User.countDocuments();
+    data.productCount = await Product.countDocuments();
+    data.orderCount = await Order.countDocuments();
+    data.deliveredOrders = await Order.countDocuments({ delivered: true, cancelled: false });
+    data.cancelOrders = await Order.countDocuments({ cancelled: true, delivered: false });
+    console.log(data)
     res.render('adminHome', data);
 }))
 module.exports = router;

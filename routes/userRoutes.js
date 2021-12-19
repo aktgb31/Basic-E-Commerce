@@ -21,11 +21,14 @@ router.post('/register', isLoginedUser, catchAsyncErrors(async(req, res, next) =
     const email = req.body.email;
     const password = req.body.password;
 
-    const user = await User.findOne({ email: email });
+    let user = await User.findOne({ email: email });
     if (user) {
         return next(new ErrorHandler('User with this email already exists', 'register'));
     }
-    await User.create({ name: name, email: email, password: password });
+    user = await User.create({ name: name, email: email, password: password });
+    req.session.userId = user._id;
+    req.session.userName = user.name;
+    req.session.success = 'Registeration successful';
     res.redirect('/');
 }));
 

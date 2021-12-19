@@ -5,6 +5,5 @@ if (envFound.error) {
 }
 
 module.exports = {
-    ENVIRONMENT: process.env.NODE_ENV,
     ADMIN: { EMAIL: process.env.ADMIN_EMAIL, PASSWORD: process.env.ADMIN_PASSWORD },
 };

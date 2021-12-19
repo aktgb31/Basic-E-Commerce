@@ -29,8 +29,10 @@ router.get('/', catchAsyncErrors(async(req, res, next) => {
             product.inCart = true;
         return product;
     });
-    data.products = []
-    while (products.length) data.products.push(products.splice(0, 3));
+    if (products.length > 0) {
+        data.products = []
+        while (products.length) data.products.push(products.splice(0, 4));
+    }
     res.render('home', data);
 }))
 
