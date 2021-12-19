@@ -38,15 +38,15 @@ router.get('/login', isLoginedUser, catchAsyncErrors(async(req, res, next) => {
     res.render('login', data);
 }));
 
-router.post('/login', catchAsyncErrors(async(req, res, next) => {
+router.post('/login', isLoginedUser, catchAsyncErrors(async(req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     const user = await User.findOne({ email: email });
     if (!user) {
-        return next(new ErrorHandler('User with this email does not exist', 'login'));
+        return next(new ErrorHandler('User with this email does not exist', '/user/login'));
     }
     if (user.password != password) {
-        return next(new ErrorHandler('Wrong password', 'login'));
+        return next(new ErrorHandler('Wrong password', '/user/login'));
     }
     req.session.userId = user._id;
     req.session.userName = user.name;
